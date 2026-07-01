@@ -1,0 +1,60 @@
+import type { AgendaItem } from '@/types'
+
+export const mockAgenda: AgendaItem[] = [
+  {
+    id: 'agenda-1',
+    time: '18:00',
+    title: 'Abertura dos Portões',
+    description: 'Abertura oficial do evento com recepção aos participantes.',
+    category: 'geral',
+    favorited: false,
+  },
+  {
+    id: 'agenda-2',
+    time: '19:00',
+    title: 'DJ Set - DJ Marques',
+    description: 'DJ Marques abre a noite com muito som.',
+    category: 'musica',
+    favorited: true,
+  },
+  {
+    id: 'agenda-3',
+    time: '20:00',
+    title: 'Banda Principal - Rock Nation',
+    description: 'A banda mais esperada da noite!',
+    category: 'musica',
+    favorited: true,
+  },
+  {
+    id: 'agenda-4',
+    time: '21:30',
+    title: 'Concurso de Talentos',
+    description: 'Participe ou vote no concurso de talentos do evento.',
+    category: 'competicao',
+    favorited: false,
+  },
+  {
+    id: 'agenda-5',
+    time: '22:30',
+    title: 'Sorteio de Brindes',
+    description: 'Sorteio de brindes especiais para os participantes.',
+    category: 'geral',
+    favorited: false,
+  },
+  {
+    id: 'agenda-6',
+    time: '23:00',
+    title: 'Show Surpresa',
+    description: 'Atração surpresa que ninguém pode perder!',
+    category: 'musica',
+    favorited: true,
+  },
+  {
+    id: 'agenda-7',
+    time: '00:30',
+    title: 'After Party',
+    description: 'A festa continua no after oficial do evento.',
+    category: 'festa',
+    favorited: false,
+  },
+]
