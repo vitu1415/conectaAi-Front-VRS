@@ -14,7 +14,7 @@ export function PersonCard({ person }: PersonCardProps) {
       animate={{ opacity: 1, scale: 1 }}
       className="bg-white rounded-2xl border border-gray-100 card-shadow overflow-hidden"
     >
-      <div className="relative h-32 bg-gradient-to-br from-cyan-400 to-orange-400">
+      <div className="relative h-32 bg-gradient-to-br from-cyan-400 to-tertiary-400">
         <div className="absolute -bottom-10 left-4">
           <Avatar src={person.avatar} alt={person.name} size="xl" className="ring-4 ring-white" />
         </div>

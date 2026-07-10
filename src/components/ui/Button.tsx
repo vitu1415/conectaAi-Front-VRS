@@ -16,7 +16,7 @@ interface ButtonProps {
 }
 
 const variants = {
-  primary: 'bg-gradient-to-r from-cyan-500 to-orange-500 text-white hover:from-cyan-600 hover:to-orange-600 shadow-lg shadow-cyan-500/20',
+  primary: 'bg-gradient-to-r from-cyan-500 to-tertiary-500 text-white hover:from-cyan-600 hover:to-tertiary-600 shadow-lg shadow-cyan-500/20',
   secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
   ghost: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
   outline: 'border-2 border-gray-200 text-gray-700 hover:border-cyan-400 hover:text-cyan-600',
@@ -37,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={{ scale: 0.97 }}
         whileHover={{ scale: 1.02 }}
         className={cn(
-          'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+          'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
           variants[variant],
           sizes[size],
           fullWidth && 'w-full',

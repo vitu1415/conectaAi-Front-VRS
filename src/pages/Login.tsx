@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, ArrowRight, Sparkles } from 'lucide-react'
+import { Mail, Lock, ArrowRight } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
 import { useApp } from '@/contexts/AppContext'
 
@@ -42,9 +42,9 @@ export function Login() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-orange-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/20"
+              className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/20"
             >
-              <Sparkles className="w-8 h-8 text-white" />
+              <img src="/src/assets/favicon.ico" alt="Logo" className="w-20 h-20" />
             </motion.div>
             <h1 className="text-3xl font-bold">
               <span className="gradient-text">ConectaAí</span>

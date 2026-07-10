@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <g opacity="0.15">
+    <line x1="12" y1="2" x2="12" y2="22" stroke="#16C6D4" stroke-width="1.5"/>
+    <line x1="2" y1="12" x2="22" y2="12" stroke="#16C6D4" stroke-width="1.5"/>
+    <line x1="5.5" y1="5.5" x2="18.5" y2="18.5" stroke="#6D3EF5" stroke-width="1"/>
+    <line x1="18.5" y1="5.5" x2="5.5" y2="18.5" stroke="#FF922E" stroke-width="1"/>
+  </g>
+  <line x1="12" y1="2" x2="12" y2="6" stroke="#16C6D4" stroke-width="1.2" stroke-opacity="0.6"/>
+  <line x1="12" y1="18" x2="12" y2="22" stroke="#16C6D4" stroke-width="1.2" stroke-opacity="0.6"/>
+  <line x1="2" y1="12" x2="6" y2="12" stroke="#16C6D4" stroke-width="1.2" stroke-opacity="0.6"/>
+  <line x1="18" y1="12" x2="22" y2="12" stroke="#16C6D4" stroke-width="1.2" stroke-opacity="0.6"/>
+  <line x1="12" y1="12" x2="5.5" y2="5.5" stroke="#6D3EF5" stroke-width="1" stroke-opacity="0.4"/>
+  <line x1="12" y1="12" x2="18.5" y2="5.5" stroke="#FF922E" stroke-width="1" stroke-opacity="0.4"/>
+  <line x1="12" y1="12" x2="5.5" y2="18.5" stroke="#FF922E" stroke-width="1" stroke-opacity="0.4"/>
+  <line x1="12" y1="12" x2="18.5" y2="18.5" stroke="#6D3EF5" stroke-width="1" stroke-opacity="0.4"/>
+  <circle cx="12" cy="12" r="5" fill="#16C6D4"/>
+  <circle cx="12" cy="12" r="2" fill="white" opacity="0.3"/>
+  <circle cx="12" cy="3.5" r="2.5" fill="#6D3EF5"/>
+  <circle cx="12" cy="20.5" r="2.5" fill="#6D3EF5"/>
+  <circle cx="3.5" cy="12" r="2.5" fill="#FF922E"/>
+  <circle cx="20.5" cy="12" r="2.5" fill="#FF922E"/>
+  <circle cx="5.5" cy="5.5" r="1.5" fill="#6D3EF5" opacity="0.6"/>
+  <circle cx="18.5" cy="5.5" r="1.5" fill="#FF922E" opacity="0.6"/>
+  <circle cx="5.5" cy="18.5" r="1.5" fill="#FF922E" opacity="0.6"/>
+  <circle cx="18.5" cy="18.5" r="1.5" fill="#6D3EF5" opacity="0.6"/>
+</svg>

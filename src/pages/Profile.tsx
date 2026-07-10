@@ -30,7 +30,7 @@ export function Profile() {
     <div className="space-y-6 animate-fade-in">
       {/* Profile Header */}
       <Card padding="none" hover={false}>
-        <div className="relative h-32 rounded-t-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-orange-500 overflow-hidden">
+        <div className="relative h-32 rounded-t-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-tertiary-500 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right, rgba(255,255,255,0.2), transparent)]" />
         </div>
         <div className="px-6 pb-6">
@@ -108,7 +108,7 @@ export function Profile() {
                 </div>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-orange-500 rounded-full transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-cyan-500 to-tertiary-500 rounded-full transition-all duration-500"
                     style={{ width: `${(user.xp / 5000) * 100}%` }}
                   />
                 </div>
@@ -151,7 +151,7 @@ export function Profile() {
             <Card key={achievement.id} className={!achievement.unlocked ? 'opacity-60' : ''}>
               <div className="flex items-start gap-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                  achievement.unlocked ? 'bg-gradient-to-br from-cyan-100 to-orange-100' : 'bg-gray-100'
+                  achievement.unlocked ? 'bg-gradient-to-br from-cyan-100 to-tertiary-100' : 'bg-gray-100'
                 }`}>
                   <achievement.icon className={`w-5 h-5 ${
                     achievement.unlocked ? 'text-cyan-600' : 'text-gray-400'
@@ -164,7 +164,7 @@ export function Profile() {
                     <div className="mt-2">
                       <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-cyan-400 to-orange-400 rounded-full"
+                          className="h-full bg-gradient-to-r from-cyan-400 to-tertiary-400 rounded-full"
                           style={{ width: `${(achievement.progress / 50) * 100}%` }}
                         />
                       </div>

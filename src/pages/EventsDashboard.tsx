@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, SlidersHorizontal, LogOut, Sparkles, CalendarDays } from 'lucide-react'
+import { Search, SlidersHorizontal, LogOut, CalendarDays } from 'lucide-react'
 import { Input, Badge } from '@/components/ui'
 import { EventCard } from '@/components/EventCard'
 import { mockEvents } from '@/mocks/events'
@@ -31,8 +31,8 @@ export function EventsDashboard() {
       <header className="bg-white/90 backdrop-blur-lg border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-orange-500 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+              <img src="/src/assets/favicon.ico" alt="Logo" className="w-8 h-8" />
             </div>
             <span className="gradient-text font-bold text-lg">ConectaAí</span>
           </div>
@@ -89,7 +89,7 @@ export function EventsDashboard() {
               onClick={() => setActiveCategory(category)}
               className={`shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeCategory === category
-                  ? 'bg-gradient-to-r from-cyan-500 to-orange-500 text-white shadow-lg shadow-cyan-500/20'
+                  ? 'bg-gradient-to-r from-cyan-500 to-tertiary-500 text-white shadow-lg shadow-cyan-500/20'
                   : 'bg-white text-gray-600 border border-gray-200 hover:border-cyan-300 hover:text-cyan-600'
               }`}
             >
