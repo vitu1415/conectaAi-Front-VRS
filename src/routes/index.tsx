@@ -5,7 +5,6 @@ import { EventLayout } from '@/layouts/EventLayout'
 import { Feed } from '@/pages/Feed'
 import { People } from '@/pages/People'
 import { Groups } from '@/pages/Groups'
-import { Teams } from '@/pages/Teams'
 import { Agenda } from '@/pages/Agenda'
 import { Announcements } from '@/pages/Announcements'
 import { Profile } from '@/pages/Profile'
@@ -29,6 +28,22 @@ export const router = createBrowserRouter([
     ),
   },
   {
+    path: '/profile',
+    element: (
+      <AuthGuard>
+        <Profile />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: '/profile/:userId',
+    element: (
+      <AuthGuard>
+        <Profile />
+      </AuthGuard>
+    ),
+  },
+  {
     path: '/event/:eventId',
     element: (
       <AuthGuard>
@@ -40,7 +55,6 @@ export const router = createBrowserRouter([
       { path: 'feed', element: <Feed /> },
       { path: 'people', element: <People /> },
       { path: 'groups', element: <Groups /> },
-      { path: 'teams', element: <Teams /> },
       { path: 'agenda', element: <Agenda /> },
       { path: 'announcements', element: <Announcements /> },
       { path: 'profile', element: <Profile /> },

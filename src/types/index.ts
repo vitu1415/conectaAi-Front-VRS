@@ -87,7 +87,34 @@ export interface PersonProfile {
   friendsInCommon: number
   distance: string
   liked?: boolean
-  connected?: boolean
+  connectionStatus?: ConnectionStatus
+}
+
+export type ConnectionStatus =
+  | 'NENHUM'
+  | 'PENDENTE_ENVIADA'
+  | 'PENDENTE_RECEBIDA'
+  | 'CONECTADO'
+  | 'RECUSADO'
+  | 'BLOQUEADO'
+
+export interface Connection {
+  id: string
+  usuarioId: string
+  usuario: User
+  status: ConnectionStatus
+  interessesComuns: string[]
+  eventosComuns: number
+  eventoOrigem?: string
+  criadoEm: string
+}
+
+export interface ConnectionRequest {
+  id: string
+  solicitante: User
+  interessesComuns: string[]
+  eventoComum?: string
+  criadoEm: string
 }
 
 export interface Group {
@@ -98,24 +125,6 @@ export interface Group {
   members: number
   lastActivity: string
   category: string
-}
-
-export interface Team {
-  id: string
-  name: string
-  description: string
-  admin: string
-  adminAvatar: string
-  vacancies: number
-  members: TeamMember[]
-  objectives: string[]
-}
-
-export interface TeamMember {
-  id: string
-  name: string
-  avatar: string
-  role: string
 }
 
 export interface AgendaItem {

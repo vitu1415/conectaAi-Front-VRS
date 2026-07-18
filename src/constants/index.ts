@@ -2,7 +2,6 @@ export const NAVIGATION_ITEMS = [
   { id: 'feed', label: 'Feed', icon: 'home', path: '/app/feed' },
   { id: 'people', label: 'Pessoas', icon: 'users', path: '/app/people' },
   { id: 'groups', label: 'Grupos', icon: 'message-circle', path: '/app/groups' },
-  { id: 'teams', label: 'Equipes', icon: 'shield', path: '/app/teams' },
   { id: 'agenda', label: 'Agenda', icon: 'calendar', path: '/app/agenda' },
   { id: 'announcements', label: 'Avisos', icon: 'megaphone', path: '/app/announcements' },
   { id: 'profile', label: 'Perfil', icon: 'user', path: '/app/profile' },

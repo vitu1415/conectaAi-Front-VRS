@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Outlet, useParams, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Home, Users, MessageCircle, Shield, Calendar,
+  Home, Users, MessageCircle, Calendar,
   Megaphone, User, Menu, LogOut, ArrowLeft, ChevronLeft,
 } from 'lucide-react'
 import { Avatar, Badge } from '@/components/ui'
@@ -14,7 +14,6 @@ const NAV_ITEMS = [
   { id: 'feed', label: 'Feed', icon: <Home className="w-5 h-5" /> },
   { id: 'people', label: 'Pessoas', icon: <Users className="w-5 h-5" /> },
   { id: 'groups', label: 'Grupos', icon: <MessageCircle className="w-5 h-5" /> },
-  { id: 'teams', label: 'Equipes', icon: <Shield className="w-5 h-5" /> },
   { id: 'agenda', label: 'Agenda', icon: <Calendar className="w-5 h-5" /> },
   { id: 'announcements', label: 'Avisos', icon: <Megaphone className="w-5 h-5" /> },
   { id: 'profile', label: 'Perfil', icon: <User className="w-5 h-5" /> },

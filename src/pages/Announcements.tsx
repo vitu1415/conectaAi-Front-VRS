@@ -4,7 +4,7 @@ import { Card, Badge } from '@/components/ui'
 import { AnnouncementsList } from '@/components/AnnouncementCard'
 
 const quickInfo = [
-  { icon: Shield, label: 'Organizadores', value: 'Equipe ConectaAí' },
+  { icon: Shield, label: 'Organizadores', value: 'ConectaAí' },
   { icon: MapPin, label: 'Portão Principal', value: 'Entrada A - Rua Principal' },
   { icon: AlertTriangle, label: 'Emergência', value: 'Ligue 190' },
   { icon: Clock, label: 'Funcionamento', value: '18h - 02h' },
