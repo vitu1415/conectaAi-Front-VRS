@@ -18,7 +18,7 @@ export function Profile() {
   const navigate = useNavigate()
   const { user: currentUser } = useApp()
 
-  const isOwnProfile = !userId || userId === currentUser.id
+  const isOwnProfile = Boolean(currentUser && (!userId || userId === currentUser.id))
   const profileUser = isOwnProfile
     ? currentUser
     : mockPeople.find((p) => p.id === userId)
@@ -27,7 +27,6 @@ export function Profile() {
   const [connections, setConnections] = useState<Connection[]>([])
   const [activeTab, setActiveTab] = useState('about')
   const [connectionStatus, setConnectionStatus] = useState('NENHUM')
-  const [stats, setStats] = useState({ connectionsCount: 0, pendingRequestsCount: 0 })
 
   const activeConnections = useMemo(
     () => connections.filter((c) => c.status === 'CONECTADO'),
@@ -36,13 +35,20 @@ export function Profile() {
 
   useEffect(() => {
     mockService.getConnections().then(setConnections)
-    mockService.getConnectionsStats().then(setStats)
     if (userId && !isOwnProfile) {
       mockService.getConnectionStatus(userId).then((status) => {
         setConnectionStatus(status.conectado ? 'CONECTADO' : status.solicitacaoPendente ? 'PENDENTE_ENVIADA' : 'NENHUM')
       })
     }
   }, [userId, isOwnProfile])
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">Carregando perfil...</p>
+      </div>
+    )
+  }
 
   const tabs = isOwnProfile
     ? [

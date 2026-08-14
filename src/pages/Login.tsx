@@ -1,24 +1,57 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, ArrowRight } from 'lucide-react'
+import { Mail, Lock, ArrowRight, User as UserIcon } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
 import { useApp } from '@/contexts/AppContext'
 
+type Mode = 'login' | 'register'
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error && 'response' in error) {
+    const data = (error as { response?: { data?: { error?: string } } }).response?.data
+    if (data?.error) return data.error
+  }
+  if (error instanceof Error) return error.message
+  return 'Não foi possível conectar ao servidor'
+}
+
 export function Login() {
+  const [mode, setMode] = useState<Mode>('login')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { login } = useApp()
+  const { login, register } = useApp()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (mode === 'register' && !name.trim()) {
+      setError('Informe seu nome')
+      return
+    }
     if (!email || !password) return
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 800))
-    login()
-    navigate('/events', { replace: true })
+    setError(null)
+    try {
+      if (mode === 'login') {
+        await login(email, password)
+      } else {
+        await register({ nome: name.trim(), email, senha: password })
+      }
+      navigate('/events', { replace: true })
+    } catch (err) {
+      setError(getErrorMessage(err))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const switchMode = (next: Mode) => {
+    setMode(next)
+    setError(null)
   }
 
   return (
@@ -54,8 +87,34 @@ export function Login() {
             </p>
           </div>
 
+          {/* Mode Toggle */}
+          <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+            {(['login', 'register'] as Mode[]).map((m) => (
+              <button
+                key={m}
+                onClick={() => switchMode(m)}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  mode === m
+                    ? 'bg-white text-cyan-600 shadow'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {m === 'login' ? 'Entrar' : 'Criar conta'}
+              </button>
+            ))}
+          </div>
+
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === 'register' && (
+              <Input
+                icon={<UserIcon className="w-4 h-4" />}
+                placeholder="Seu nome"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            )}
             <Input
               icon={<Mail className="w-4 h-4" />}
               placeholder="Seu e-mail"
@@ -70,6 +129,13 @@ export function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+
+            {error && (
+              <p className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+
             <Button
               type="submit"
               fullWidth
@@ -77,7 +143,7 @@ export function Login() {
               loading={loading}
               icon={<ArrowRight className="w-4 h-4" />}
             >
-              Entrar
+              {mode === 'login' ? 'Entrar' : 'Criar conta'}
             </Button>
           </form>
 
@@ -95,9 +161,6 @@ export function Login() {
           <div className="space-y-3">
             <Button variant="outline" fullWidth icon={<Mail className="w-4 h-4" />}>
               Entrar com Google
-            </Button>
-            <Button variant="outline" fullWidth>
-              Criar conta
             </Button>
           </div>
 

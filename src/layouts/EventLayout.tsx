@@ -39,6 +39,8 @@ export function EventLayout() {
     setSidebarOpen(false)
   }
 
+  if (!user) return null
+
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

@@ -15,6 +15,8 @@ export function CreatePost() {
     setIsExpanded(false)
   }
 
+  if (!user) return null
+
   return (
     <motion.div
       layout

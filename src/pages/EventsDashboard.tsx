@@ -23,6 +23,8 @@ export function EventsDashboard() {
     mockService.getConnectionRequests().then(setPendingRequests)
   }, [])
 
+  if (!user) return null
+
   const filteredEvents = mockEvents.filter((event) => {
     const matchesSearch = event.title.toLowerCase().includes(search.toLowerCase())
     const matchesCategory = activeCategory === 'Todos' || event.category === activeCategory
@@ -43,6 +45,7 @@ export function EventsDashboard() {
     await mockService.rejectConnection(id)
     setPendingRequests((prev) => prev.filter((r) => r.id !== id))
   }
+
 
   return (
     <div className="min-h-screen bg-gray-50">
