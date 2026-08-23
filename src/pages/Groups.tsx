@@ -1,45 +1,35 @@
-import { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { GroupCard } from '@/components/GroupCard'
-import { Tabs } from '@/components/ui'
-import { mockGroups } from '@/mocks/groups'
+import { Hammer, ArrowLeft } from 'lucide-react'
 
 export function Groups() {
-  const [activeTab, setActiveTab] = useState('all')
-
-  const tabs = [
-    { id: 'all', label: 'Todos' },
-    { id: 'social', label: 'Sociais' },
-    { id: 'musica', label: 'Música' },
-    { id: 'hobby', label: 'Hobbies' },
-    { id: 'esporte', label: 'Esportes' },
-  ]
-
-  const filtered = activeTab === 'all'
-    ? mockGroups
-    : mockGroups.filter((g) => g.category === activeTab)
+  const { eventId } = useParams()
+  const navigate = useNavigate()
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Grupos</h1>
-        <p className="text-sm text-gray-500 mt-1">Conheça pessoas com interesses em comum</p>
-      </div>
-
-      <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
-
-      <div className="space-y-3">
-        {filtered.map((group, index) => (
-          <motion.div
-            key={group.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.03 }}
-          >
-            <GroupCard group={group} />
-          </motion.div>
-        ))}
-      </div>
+    <div className="min-h-[60vh] flex items-center justify-center animate-fade-in">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="text-center max-w-md mx-auto px-4"
+      >
+        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 to-tertiary-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/20">
+          <Hammer className="w-9 h-9 text-white" />
+        </div>
+        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Chats em grupos (em breve)</h1>
+        <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+          A funcionalidade de grupos está sendo preparada. Em breve você poderá encontrar e
+          participar de grupos com interesses em comum.
+        </p>
+        <button
+          onClick={() => navigate(`/event/${eventId}/feed`)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm text-sm font-medium text-gray-600 hover:border-cyan-400 hover:text-cyan-600 mt-6 transition-all duration-200"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar ao feed
+        </button>
+      </motion.div>
     </div>
   )
 }

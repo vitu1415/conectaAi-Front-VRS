@@ -1,10 +1,10 @@
-export type StatusUsuario = 'ATIVO' | 'INATIVO'
+export type StatusUsuario = 'ATIVO' | 'INATIVO' | 'BLOQUEADO'
 export type StatusEvento = 'RASCUNHO' | 'PUBLICADO' | 'ENCERRADO' | 'CANCELADO'
-export type StatusInscricao = 'CONFIRMADA' | 'CANCELADA' | 'AGUARDANDO'
-export type PapelInscricao = 'ORGANIZADOR' | 'PARTICIPANTE'
+export type StatusInscricao = 'INSCRITO' | 'CHECKIN' | 'SAIU'
+export type PapelInscricao = 'PARTICIPANTE' | 'ORGANIZADOR' | 'STAFF' | 'PALESTRANTE'
 export type StatusConexao = 'PENDENTE' | 'ACEITA' | 'RECUSADA' | 'BLOQUEADA'
-export type TipoPost = 'POST' | 'ANUNCIO'
-export type VisibilidadePost = 'PUBLICO' | 'EVENTO' | 'PRIVADO'
+export type TipoPost = 'TEXTO' | 'IMAGEM' | 'VIDEO'
+export type VisibilidadePost = 'PUBLICO' | 'PRIVADO'
 
 export interface LoginRequest {
   email: string
@@ -221,4 +221,14 @@ export interface ConexaoResponse {
 
 export interface RelacionamentoResponse {
   status: StatusConexao | 'NENHUM'
+}
+
+export interface CursorPaginacao {
+  id: string
+  data: string
+}
+
+export interface PageResponse<T> {
+  content: T[]
+  nextCursor: CursorPaginacao | null
 }

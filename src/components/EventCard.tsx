@@ -25,9 +25,11 @@ export function EventCard({ event, onEnter }: EventCardProps) {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <Badge className="absolute top-3 left-3 bg-white/90 text-gray-800 border-0">
-          {event.category}
-        </Badge>
+        {event.category && (
+          <Badge className="absolute top-3 left-3 bg-white/90 text-gray-800 border-0">
+            {event.category}
+          </Badge>
+        )}
         <div className="absolute bottom-3 left-3 right-3">
           <h3 className="text-white font-semibold text-lg leading-tight drop-shadow-sm">
             {event.title}
@@ -50,13 +52,16 @@ export function EventCard({ event, onEnter }: EventCardProps) {
           </span>
         </div>
         <div className="flex items-center justify-between pt-1">
-          <span className="text-sm font-medium text-cyan-600">
-            {event.price}
-          </span>
+          {event.price && (
+            <span className="text-sm font-medium text-cyan-600">
+              {event.price}
+            </span>
+          )}
           <Button
             size="sm"
             onClick={() => onEnter?.(event)}
             icon={<ArrowRight className="w-4 h-4" />}
+            className={event.price ? '' : 'ml-auto'}
           >
             Entrar
           </Button>

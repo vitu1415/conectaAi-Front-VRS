@@ -1,5 +1,6 @@
 import type {
   AgendaResponse,
+  ComentarioResponse,
   ConexaoResponse,
   EventoResponse,
   ParticipanteResponse,
@@ -11,7 +12,9 @@ import type {
 } from '@/types/api'
 import type {
   AgendaItem,
+  Comment,
   Connection,
+  ConnectionRequest,
   ConnectionStatus,
   Event,
   PersonProfile,
@@ -103,7 +106,21 @@ export function mapPostResponse(post: PostResponse): Post {
     shares: 0,
     liked: post.curtido,
     timestamp: post.criadoEm,
-    type: post.tipo === 'ANUNCIO' ? 'announcement' : 'post',
+    type: 'post',
+  }
+}
+
+export function mapComentarioResponse(comentario: ComentarioResponse): Comment {
+  return {
+    id: comentario.id,
+    postId: comentario.postId,
+    userId: comentario.usuario.id,
+    userName: comentario.usuario.nome,
+    userAvatar: comentario.usuario.fotoPerfil || '',
+    content: comentario.texto,
+    timestamp: comentario.criadoEm,
+    likes: 0,
+    replies: [],
   }
 }
 
@@ -159,6 +176,16 @@ export function mapConexaoResponse(
 
 export function mapRelacionamento(status: RelacionamentoResponse): ConnectionStatus {
   return mapConexaoStatus(status.status)
+}
+
+export function mapConexaoRecebida(conexao: ConexaoResponse): ConnectionRequest {
+  return {
+    id: conexao.id,
+    solicitante: mapUsuarioResumo(conexao.usuarioOrigem),
+    interessesComuns: [],
+    eventoComum: undefined,
+    criadoEm: conexao.criadoEm,
+  }
 }
 
 export function mapParticipanteResponse(participante: ParticipanteResponse): PersonProfile {

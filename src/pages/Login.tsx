@@ -4,17 +4,9 @@ import { motion } from 'framer-motion'
 import { Mail, Lock, ArrowRight, User as UserIcon } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
 import { useApp } from '@/contexts/AppContext'
+import { getErrorMessage } from '@/utils/error'
 
 type Mode = 'login' | 'register'
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error && 'response' in error) {
-    const data = (error as { response?: { data?: { error?: string } } }).response?.data
-    if (data?.error) return data.error
-  }
-  if (error instanceof Error) return error.message
-  return 'Não foi possível conectar ao servidor'
-}
 
 export function Login() {
   const [mode, setMode] = useState<Mode>('login')

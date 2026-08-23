@@ -1,14 +1,18 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, useParams, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Home, Users, MessageCircle, Calendar,
   Megaphone, User, Menu, LogOut, ArrowLeft, ChevronLeft,
 } from 'lucide-react'
-import { Avatar, Badge } from '@/components/ui'
+import { Avatar, Badge, Button } from '@/components/ui'
 import { useApp } from '@/contexts/AppContext'
+import * as eventoService from '@/services/eventos'
+import * as usuarioService from '@/services/usuarios'
+import { mapEventoResponse } from '@/services/mappers'
+import { getErrorMessage } from '@/utils/error'
 import { cn } from '@/utils/cn'
-import { mockEvents } from '@/mocks/events'
+import type { Event } from '@/types'
 
 const NAV_ITEMS = [
   { id: 'feed', label: 'Feed', icon: <Home className="w-5 h-5" /> },
@@ -16,7 +20,6 @@ const NAV_ITEMS = [
   { id: 'groups', label: 'Grupos', icon: <MessageCircle className="w-5 h-5" /> },
   { id: 'agenda', label: 'Agenda', icon: <Calendar className="w-5 h-5" /> },
   { id: 'announcements', label: 'Avisos', icon: <Megaphone className="w-5 h-5" /> },
-  { id: 'profile', label: 'Perfil', icon: <User className="w-5 h-5" /> },
 ]
 
 export function EventLayout() {
@@ -26,10 +29,44 @@ export function EventLayout() {
   const navigate = useNavigate()
   const { user, logout } = useApp()
 
-  const event = useMemo(
-    () => mockEvents.find((e) => e.id === eventId),
-    [eventId],
-  )
+  const [event, setEvent] = useState<Event | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [participantsCount, setParticipantsCount] = useState(0)
+  const [participantsHasMore, setParticipantsHasMore] = useState(false)
+  const [isParticipating, setIsParticipating] = useState(false)
+  const [participationLoading, setParticipationLoading] = useState(false)
+
+  useEffect(() => {
+    if (!eventId) return
+    let cancelled = false
+    setLoading(true)
+    setError(null)
+
+    const load = async () => {
+      try {
+        const [eventoData, participantesPage, meusEventos] = await Promise.all([
+          eventoService.getById(eventId),
+          eventoService.participantes(eventId),
+          usuarioService.getMeusEventos(),
+        ])
+        if (cancelled) return
+        setEvent(mapEventoResponse(eventoData))
+        setParticipantsCount(participantesPage.content.length)
+        setParticipantsHasMore(Boolean(participantesPage.nextCursor))
+        setIsParticipating(meusEventos.some((e) => e.evento.id === eventId))
+      } catch (err) {
+        if (!cancelled) setError(getErrorMessage(err))
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [eventId])
 
   const currentPath = location.pathname
   const currentSection = currentPath.split('/').pop() || 'feed'
@@ -39,13 +76,41 @@ export function EventLayout() {
     setSidebarOpen(false)
   }
 
+  const handleParticipate = async () => {
+    if (!eventId) return
+    setParticipationLoading(true)
+    try {
+      if (isParticipating) {
+        await eventoService.cancelarInscricao(eventId)
+        setIsParticipating(false)
+        setParticipantsCount((prev) => Math.max(0, prev - 1))
+      } else {
+        await eventoService.participar(eventId)
+        setIsParticipating(true)
+        setParticipantsCount((prev) => prev + 1)
+      }
+    } catch (err) {
+      setError(getErrorMessage(err))
+    } finally {
+      setParticipationLoading(false)
+    }
+  }
+
   if (!user) return null
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
 
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-gray-500">Evento não encontrado</p>
+          <p className="text-gray-500">{error || 'Evento não encontrado'}</p>
           <button onClick={() => navigate('/events')} className="text-cyan-500 mt-2 underline">
             Voltar para eventos
           </button>
@@ -106,7 +171,7 @@ export function EventLayout() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-100 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto flex flex-col',
+          'fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-100 transform transition-transform duration-300 lg:translate-x-0 lg:inset-y-0 flex flex-col',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -129,8 +194,17 @@ export function EventLayout() {
             </div>
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <Badge variant="primary" size="sm">{event.participants} participantes</Badge>
+            <Badge variant="primary" size="sm">{participantsCount}{participantsHasMore ? '+' : ''} participantes</Badge>
           </div>
+          <Button
+            size="sm"
+            className="w-full mt-3"
+            variant={isParticipating ? 'secondary' : 'primary'}
+            loading={participationLoading}
+            onClick={handleParticipate}
+          >
+            {isParticipating ? 'Sair do evento' : 'Participar'}
+          </Button>
         </div>
 
         {/* Navigation */}
@@ -210,7 +284,17 @@ export function EventLayout() {
                   </div>
                   <h1 className="text-2xl font-bold text-white drop-shadow-sm">{event.title}</h1>
                 </div>
-                <Badge variant="primary" size="md">{event.participants} participantes</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="primary" size="md">{participantsCount}{participantsHasMore ? '+' : ''} participantes</Badge>
+                  <Button
+                    size="sm"
+                    variant={isParticipating ? 'secondary' : 'primary'}
+                    loading={participationLoading}
+                    onClick={handleParticipate}
+                  >
+                    {isParticipating ? 'Sair do evento' : 'Participar'}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

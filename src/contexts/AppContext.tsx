@@ -10,6 +10,7 @@ import type { User, Event } from '@/types'
 import type { RegisterRequest } from '@/types/api'
 import { tokenStorage } from '@/services/api'
 import * as authService from '@/services/auth'
+import * as usuarioService from '@/services/usuarios'
 import { mapUsuarioResponse } from '@/services/mappers'
 
 interface AppContextType {
@@ -21,6 +22,7 @@ interface AppContextType {
   login: (email: string, senha: string) => Promise<void>
   register: (payload: RegisterRequest) => Promise<void>
   logout: () => Promise<void>
+  refreshUser: () => Promise<void>
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
@@ -35,7 +37,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const token = tokenStorage.getAccessToken()
     if (!token) return
 
-    authService
+    usuarioService
       .me()
       .then((data) => {
         if (!cancelled) setUser(mapUsuarioResponse(data))
@@ -55,19 +57,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const refreshUser = useCallback(async () => {
+    const data = await usuarioService.me()
+    setUser(mapUsuarioResponse(data))
+  }, [])
+
   const login = useCallback(async (email: string, senha: string) => {
     const tokens = await authService.login({ email, senha })
     tokenStorage.setTokens(tokens.token, tokens.refreshToken)
-    const data = await authService.me()
-    setUser(mapUsuarioResponse(data))
-  }, [])
+    await refreshUser()
+  }, [refreshUser])
 
   const register = useCallback(async (payload: RegisterRequest) => {
     const tokens = await authService.register(payload)
     tokenStorage.setTokens(tokens.token, tokens.refreshToken)
-    const data = await authService.me()
-    setUser(mapUsuarioResponse(data))
-  }, [])
+    await refreshUser()
+  }, [refreshUser])
 
   const logout = useCallback(async () => {
     try {
@@ -95,6 +100,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        refreshUser,
       }}
     >
       {children}

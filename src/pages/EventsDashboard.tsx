@@ -1,51 +1,81 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, SlidersHorizontal, LogOut, CalendarDays, Bell, User } from 'lucide-react'
-import { Input, Badge, Button, Modal } from '@/components/ui'
+import { Search, LogOut, CalendarDays, Bell, User, AlertTriangle, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { Input, Button, Modal, CardSkeleton } from '@/components/ui'
 import { EventCard } from '@/components/EventCard'
 import { ConnectionRequestCard } from '@/components/ConnectionRequestCard'
-import { mockEvents } from '@/mocks/events'
-import { EVENT_CATEGORIES } from '@/constants'
 import { useApp } from '@/contexts/AppContext'
-import { mockService } from '@/services/mockService'
-import type { ConnectionRequest } from '@/types'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import * as eventoService from '@/services/eventos'
+import * as conexoesService from '@/services/conexoes'
+import { mapEventoResponse, mapConexaoRecebida } from '@/services/mappers'
+import type { ConnectionRequest, Event } from '@/types'
 
 export function EventsDashboard() {
   const navigate = useNavigate()
   const { user, setSelectedEvent, logout } = useApp()
   const [search, setSearch] = useState('')
-  const [activeCategory, setActiveCategory] = useState('Todos')
   const [pendingRequests, setPendingRequests] = useState<ConnectionRequest[]>([])
   const [showRequests, setShowRequests] = useState(false)
 
+  const {
+    items: events,
+    loading: loadingEvents,
+    loadingMore: loadingMoreEvents,
+    error: errorEvents,
+    sentinelRef: eventsSentinelRef,
+    reload: reloadEvents,
+  } = useInfiniteScroll<Event>({
+    fetchPage: (cursor) =>
+      eventoService.list(cursor).then((page) => ({
+        content: page.content.map(mapEventoResponse),
+        nextCursor: page.nextCursor,
+      })),
+  })
+
   useEffect(() => {
-    mockService.getConnectionRequests().then(setPendingRequests)
+    let cancelled = false
+    conexoesService
+      .recebidas()
+      .then((data) => {
+        if (!cancelled) setPendingRequests(data.map(mapConexaoRecebida))
+      })
+      .catch(() => {
+        if (!cancelled) setPendingRequests([])
+      })
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   if (!user) return null
 
-  const filteredEvents = mockEvents.filter((event) => {
-    const matchesSearch = event.title.toLowerCase().includes(search.toLowerCase())
-    const matchesCategory = activeCategory === 'Todos' || event.category === activeCategory
-    return matchesSearch && matchesCategory
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch =
+      event.title.toLowerCase().includes(search.toLowerCase()) ||
+      event.city.toLowerCase().includes(search.toLowerCase())
+    return matchesSearch
   })
 
-  const handleEnterEvent = (event: typeof mockEvents[0]) => {
+  const handleEnterEvent = (event: Event) => {
     setSelectedEvent(event)
     navigate(`/event/${event.id}/feed`)
   }
 
   const handleAcceptRequest = async (id: string) => {
-    await mockService.acceptConnection(id)
+    await conexoesService.aceitar(id)
     setPendingRequests((prev) => prev.filter((r) => r.id !== id))
   }
 
   const handleRejectRequest = async (id: string) => {
-    await mockService.rejectConnection(id)
+    await conexoesService.recusar(id)
     setPendingRequests((prev) => prev.filter((r) => r.id !== id))
   }
 
+  const retry = () => {
+    reloadEvents()
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -109,60 +139,69 @@ export function EventsDashboard() {
           </p>
         </motion.div>
 
-        {/* Search and Filters */}
+        {/* Search */}
         <div className="flex gap-3 items-center">
           <div className="flex-1 relative">
             <Input
               icon={<Search className="w-4 h-4" />}
-              placeholder="Pesquisar eventos..."
+              placeholder="Pesquisar eventos por nome ou cidade..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <button className="p-2.5 bg-white border border-gray-200 rounded-xl hover:border-cyan-300 text-gray-400 transition-colors">
-            <SlidersHorizontal className="w-4 h-4" />
-          </button>
         </div>
 
-        {/* Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {EVENT_CATEGORIES.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                activeCategory === category
-                  ? 'bg-gradient-to-r from-cyan-500 to-tertiary-500 text-white shadow-lg shadow-cyan-500/20'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-cyan-300 hover:text-cyan-600'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {/* Events Grid */}
-        {filteredEvents.length > 0 ? (
+        {loadingEvents ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredEvents.map((event, index) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <EventCard event={event} onEnter={handleEnterEvent} />
-              </motion.div>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CardSkeleton key={i} />
             ))}
           </div>
-        ) : (
+        ) : errorEvents ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
-              <CalendarDays className="w-6 h-6 text-gray-400" />
+            <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="w-6 h-6 text-red-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Nenhum evento encontrado</h3>
-            <p className="text-sm text-gray-500 mt-1">Tente ajustar sua pesquisa ou filtros</p>
+            <h3 className="text-lg font-semibold text-gray-900">Não foi possível carregar os eventos</h3>
+            <p className="text-sm text-gray-500 mt-1">{errorEvents}</p>
+            <Button size="sm" className="mt-4" onClick={retry}>
+              Tentar novamente
+            </Button>
           </div>
+        ) : (
+          <>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 mb-3">Todos os eventos</h2>
+              {filteredEvents.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {filteredEvents.map((event, index) => (
+                    <motion.div
+                      key={event.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: Math.min(index, 5) * 0.05 }}
+                    >
+                      <EventCard event={event} onEnter={handleEnterEvent} />
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16">
+                  <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                    <CalendarDays className="w-6 h-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Nenhum evento encontrado</h3>
+                  <p className="text-sm text-gray-500 mt-1">Tente ajustar sua pesquisa</p>
+                </div>
+              )}
+              {loadingMoreEvents && (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="w-6 h-6 text-cyan-500 animate-spin" />
+                </div>
+              )}
+              <div ref={eventsSentinelRef} className="h-px" />
+            </div>
+          </>
         )}
       </main>
 

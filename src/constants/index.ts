@@ -20,41 +20,51 @@ export const EVENT_CATEGORIES = [
   'Festivais',
 ] as const
 
-export const INTERESTS = [
-  'Tecnologia', 'Música', 'Esportes', 'Arte', 'Fotografia',
-  'Games', 'Cinema', 'Gastronomia', 'Viagem', 'Moda',
-  'Dança', 'Teatro', 'Literatura', 'Natureza', 'Animais',
-  'Voluntariado', 'Empreendedorismo', 'Inovação', 'Ciência', 'História',
+export const INTEREST_CATEGORIES = [
+  {
+    id: 'esportes',
+    name: 'Esportes',
+    items: [
+      'Futebol', 'Vôlei', 'Basquete', 'Tênis', 'Corrida',
+      'Academia', 'Yoga', 'Surf', 'Skate', 'Ciclismo',
+    ],
+  },
+  {
+    id: 'musica',
+    name: 'Música',
+    items: [
+      'Rock', 'Pop', 'Funk', 'Sertanejo', 'Eletrônica',
+      'Hip Hop', 'MPB', 'Jazz', 'Clássica', 'Reggae',
+    ],
+  },
+  {
+    id: 'tecnologia',
+    name: 'Tecnologia',
+    items: [
+      'Programação', 'Inteligência Artificial', 'Games', 'Startup', 'Design',
+      'Dados', 'Cibersegurança',
+    ],
+  },
+  {
+    id: 'arte-cultura',
+    name: 'Arte & Cultura',
+    items: ['Cinema', 'Fotografia', 'Teatro', 'Dança', 'Pintura', 'Literatura', 'Museus'],
+  },
+  {
+    id: 'gastronomia',
+    name: 'Gastronomia',
+    items: ['Culinária', 'Vinhos', 'Cerveja Artesanal', 'Café', 'Gastronomia Molecular'],
+  },
+  {
+    id: 'lazer',
+    name: 'Lazer',
+    items: ['Viagem', 'Trilha', 'Praia', 'Campo', 'Pesca', 'Acampamento'],
+  },
+  {
+    id: 'educacao',
+    name: 'Educação',
+    items: ['Cursos', 'Workshops', 'Palestras', 'Idiomas'],
+  },
 ] as const
 
-export const GROUP_CATEGORIES = [
-  { id: 'freshmen', name: '🎓 Calouros', description: 'Calouros e novatos' },
-  { id: 'openbar', name: '🍺 Open Bar', description: 'Open Bar e bebidas' },
-  { id: 'rides', name: '🚗 Caronas', description: 'Caronas compartilhadas' },
-  { id: 'funk', name: '🎵 Funk', description: 'Amantes do Funk' },
-  { id: 'rock', name: '🎸 Rock', description: 'Fãs de Rock' },
-  { id: 'networking', name: '🤝 Networking', description: 'Networking profissional' },
-  { id: 'photography', name: '📸 Fotografia', description: 'Fotografia do evento' },
-  { id: 'games', name: '🎮 Games', description: 'Gamers unidos' },
-  { id: 'running', name: '🏃 Corrida', description: 'Corredores do evento' },
-] as const
-
-export const MOCK_USER: import('@/types').User = {
-  id: 'user-1',
-  name: 'Rafael Silva',
-  email: 'rafael@email.com',
-  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rafael',
-  age: 24,
-  city: 'São Paulo, SP',
-  university: 'USP',
-  description: 'Apaixonado por tecnologia e música. Vamos nos conectar!',
-  interests: ['Tecnologia', 'Música', 'Games', 'Fotografia'],
-  badges: [
-    { id: 'b1', name: 'Veterano', icon: 'trophy', color: 'yellow' },
-    { id: 'b2', name: 'Conectado', icon: 'zap', color: 'cyan' },
-    { id: 'b3', name: 'Social', icon: 'users', color: 'orange' },
-  ],
-  friends: ['user-2', 'user-3', 'user-4'],
-  level: 7,
-  xp: 2450,
-}
+export const INTERESTS = INTEREST_CATEGORIES.flatMap((category) => category.items)

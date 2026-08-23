@@ -23,7 +23,7 @@ const statusColors = {
 
 export function Avatar({ src, alt, size = 'md', className, status }: AvatarProps) {
   return (
-    <div className={cn('relative inline-flex shrink-0', className)}>
+    <div className={cn('relative inline-flex shrink-0')}>
       <img
         src={src}
         alt={alt}

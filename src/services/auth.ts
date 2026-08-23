@@ -3,7 +3,6 @@ import type {
   LoginRequest,
   RegisterRequest,
   TokenResponse,
-  UsuarioResponse,
 } from '@/types/api'
 
 export async function login(credentials: LoginRequest): Promise<TokenResponse> {
@@ -18,9 +17,4 @@ export async function register(payload: RegisterRequest): Promise<TokenResponse>
 
 export async function logout(refreshToken: string): Promise<void> {
   await api.post('/auth/logout', { refreshToken })
-}
-
-export async function me(): Promise<UsuarioResponse> {
-  const { data } = await api.get<UsuarioResponse>('/auth/me')
-  return data
 }

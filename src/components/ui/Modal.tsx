@@ -41,7 +41,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             aria-label={title}
           >
             {title && (
-              <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100">
                 <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
                 <button
                   onClick={onClose}
@@ -52,7 +52,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
                 </button>
               </div>
             )}
-            <div className="p-6">{children}</div>
+            <div className="p-4 sm:p-6">{children}</div>
           </motion.div>
         </div>
       )}

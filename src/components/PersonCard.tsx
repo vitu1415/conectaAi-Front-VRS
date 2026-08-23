@@ -50,7 +50,10 @@ export function PersonCard({ person, onConnect, onAccept, onReject }: PersonCard
       <div className="pt-12 p-4 space-y-3">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-gray-900">{person.name}, {person.age}</h3>
+            <h3 className="font-semibold text-gray-900">
+              {person.name}
+              {person.age > 0 ? `, ${person.age}` : ''}
+            </h3>
           </div>
           <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
             <MapPin className="w-3 h-3" />
@@ -79,13 +82,17 @@ export function PersonCard({ person, onConnect, onAccept, onReject }: PersonCard
           ))}
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-gray-400">
-          <span className="flex items-center gap-1">
-            <Users className="w-3 h-3" />
-            {person.friendsInCommon} amigos em comum
-          </span>
-          <span>{person.distance}</span>
-        </div>
+        {(person.friendsInCommon > 0 || person.distance) && (
+          <div className="flex items-center gap-4 text-xs text-gray-400">
+            {person.friendsInCommon > 0 && (
+              <span className="flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                {person.friendsInCommon} amigos em comum
+              </span>
+            )}
+            {person.distance && <span>{person.distance}</span>}
+          </div>
+        )}
 
         <div className="flex gap-2 pt-1" onClick={(e) => e.stopPropagation()}>
           {status === 'NENHUM' && (
