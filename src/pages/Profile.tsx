@@ -1,15 +1,16 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   MapPin, School, Calendar, Users, Trophy, Zap,
   Settings, Share2, UserPlus, UserCheck,
-  MessageCircle, ArrowLeft,
+  MessageCircle, ArrowLeft, Camera,
 } from 'lucide-react'
 import { Avatar, Badge, Button, Card, Tabs, Modal, Input } from '@/components/ui'
 import { ConnectionList } from '@/components/ConnectionList'
 import { useApp } from '@/contexts/AppContext'
 import * as usuarioService from '@/services/usuarios'
 import * as conexoesService from '@/services/conexoes'
+import * as storageService from '@/services/storage'
 import { mapEventoResponse, mapUsuarioResponse, mapConexaoResponse, mapRelacionamento } from '@/services/mappers'
 import { INTEREST_CATEGORIES } from '@/constants'
 import { cn } from '@/utils/cn'
@@ -41,7 +42,11 @@ export function Profile() {
   const [editCidade, setEditCidade] = useState('')
   const [editEstado, setEditEstado] = useState('')
   const [editFoto, setEditFoto] = useState('')
+  const [editFile, setEditFile] = useState<File | null>(null)
+  const [editFotoPreview, setEditFotoPreview] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const activeConnections = useMemo(
     () => connections.filter((c) => c.status === 'CONECTADO'),
@@ -152,6 +157,8 @@ export function Profile() {
     setEditCidade(cidade || '')
     setEditEstado(estado || '')
     setEditFoto(currentUser.avatar)
+    setEditFile(null)
+    setEditFotoPreview(null)
     setSelectedInterests(interests)
     setEditError(null)
     setEditOpen(true)
@@ -169,8 +176,19 @@ export function Profile() {
       if ((editEstado || '') !== (estado || '')) payload.estado = editEstado
       if (Object.keys(payload).length > 0) await usuarioService.updateMe(payload)
 
-      if (editFoto !== currentUser.avatar) {
-        await usuarioService.updateFoto({ fotoPerfil: editFoto })
+      let fotoUrl = editFoto
+      if (editFile) {
+        setUploading(true)
+        try {
+          const result = await storageService.uploadFile(editFile, 'profile')
+          fotoUrl = result.url
+        } finally {
+          setUploading(false)
+        }
+      }
+
+      if (fotoUrl !== currentUser.avatar) {
+        await usuarioService.updateFoto({ fotoPerfil: fotoUrl })
       }
 
       const interestsChanged = selectedInterests.join(',') !== interests.join(',')
@@ -477,11 +495,42 @@ export function Profile() {
               onChange={(e) => setEditEstado(e.target.value)}
             />
           </div>
-          <Input
-            label="URL da foto de perfil"
-            value={editFoto}
-            onChange={(e) => setEditFoto(e.target.value)}
-          />
+          <div>
+            <p className="block text-sm font-medium text-gray-700 mb-2">Foto de perfil</p>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="relative group cursor-pointer"
+              >
+                <Avatar
+                  src={editFotoPreview || editFoto}
+                  alt="Preview"
+                  size="lg"
+                  className="ring-2 ring-gray-200 group-hover:ring-cyan-400 transition-all"
+                />
+                <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-white" />
+                </div>
+              </button>
+              <div className="text-sm text-gray-500">
+                <p>Clique para alterar a foto</p>
+                <p className="text-xs text-gray-400">JPG, PNG ou WEBP</p>
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  setEditFile(file)
+                  setEditFotoPreview(URL.createObjectURL(file))
+                }}
+              />
+            </div>
+          </div>
           <div>
             <p className="block text-sm font-medium text-gray-700 mb-2">Interesses</p>
             <div className="space-y-4">
@@ -535,7 +584,7 @@ export function Profile() {
             </p>
           )}
 
-          <Button fullWidth loading={saving} onClick={handleSave}>
+          <Button fullWidth loading={saving || uploading} onClick={handleSave}>
             Salvar alterações
           </Button>
         </div>
