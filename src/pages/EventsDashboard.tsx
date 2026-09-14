@@ -58,8 +58,13 @@ export function EventsDashboard() {
     return matchesSearch
   })
 
-  const handleEnterEvent = (event: Event) => {
+  const handleEnterEvent = async (event: Event) => {
     setSelectedEvent(event)
+    try {
+      await eventoService.participar(event.id)
+    } catch {
+      // já inscrito ou erro — navega mesmo assim
+    }
     navigate(`/event/${event.id}/feed`)
   }
 

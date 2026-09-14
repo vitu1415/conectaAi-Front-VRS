@@ -25,24 +25,8 @@ export interface RegisterRequest {
   estado?: string
 }
 
-export interface RefreshTokenRequest {
-  refreshToken: string
-}
-
-export interface LogoutRequest {
-  refreshToken: string
-  email?: string
-}
-
-export interface RedefinirSenhaRequest {
-  email: string
-  token: string
-  novaSenha: string
-}
-
 export interface TokenResponse {
-  token: string
-  refreshToken: string
+  accessToken: string
 }
 
 export interface UsuarioResponse {

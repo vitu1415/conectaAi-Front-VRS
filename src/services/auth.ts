@@ -15,6 +15,11 @@ export async function register(payload: RegisterRequest): Promise<TokenResponse>
   return data
 }
 
-export async function logout(refreshToken: string): Promise<void> {
-  await api.post('/auth/logout', { refreshToken })
+export async function refresh(): Promise<TokenResponse> {
+  const { data } = await api.post<TokenResponse>('/auth/refresh-token')
+  return data
+}
+
+export async function logout(): Promise<void> {
+  await api.post('/auth/logout')
 }

@@ -1,34 +1,32 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
-import type { TokenResponse } from '@/types/api'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
-const TOKEN_KEY = '@conectaai:token'
-const REFRESH_TOKEN_KEY = '@conectaai:refreshToken'
+let accessToken: string | null = null
 
-export const tokenStorage = {
-  getAccessToken: () => localStorage.getItem(TOKEN_KEY),
-  getRefreshToken: () => localStorage.getItem(REFRESH_TOKEN_KEY),
-  setTokens: (token: string, refreshToken: string) => {
-    localStorage.setItem(TOKEN_KEY, token)
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
-  },
-  clear: () => {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(REFRESH_TOKEN_KEY)
-  },
+export function getAccessToken(): string | null {
+  return accessToken
+}
+
+export function setAccessToken(token: string | null) {
+  accessToken = token
+}
+
+export function clearAccessToken() {
+  accessToken = null
 }
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
 api.interceptors.request.use((config) => {
-  const token = tokenStorage.getAccessToken()
+  const token = getAccessToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -38,18 +36,13 @@ api.interceptors.request.use((config) => {
 const refreshClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  withCredentials: true,
 })
 
 async function refreshAccessToken(): Promise<string> {
-  const refreshToken = tokenStorage.getRefreshToken()
-  if (!refreshToken) {
-    throw new Error('Sem refresh token disponível')
-  }
-  const { data } = await refreshClient.post<TokenResponse>('/auth/refresh-token', {
-    refreshToken,
-  })
-  tokenStorage.setTokens(data.token, data.refreshToken)
-  return data.token
+  const { data } = await refreshClient.post<{ accessToken: string }>('/auth/refresh-token')
+  setAccessToken(data.accessToken)
+  return data.accessToken
 }
 
 interface RetriableRequest extends InternalAxiosRequestConfig {
@@ -104,7 +97,7 @@ api.interceptors.response.use(
       original.headers.Authorization = `Bearer ${newToken}`
       return api(original)
     } catch {
-      tokenStorage.clear()
+      clearAccessToken()
       if (window.location.pathname !== '/login') {
         window.location.href = '/login'
       }

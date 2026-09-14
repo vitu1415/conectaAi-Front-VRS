@@ -8,7 +8,7 @@ import {
 } from 'react'
 import type { User, Event } from '@/types'
 import type { RegisterRequest } from '@/types/api'
-import { tokenStorage } from '@/services/api'
+import { getAccessToken, setAccessToken, clearAccessToken } from '@/services/api'
 import * as authService from '@/services/auth'
 import * as usuarioService from '@/services/usuarios'
 import { mapUsuarioResponse } from '@/services/mappers'
@@ -30,21 +30,26 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
-  const [loading, setLoading] = useState(() => Boolean(tokenStorage.getAccessToken()))
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
-    const token = tokenStorage.getAccessToken()
-    if (!token) return
 
-    usuarioService
-      .me()
+    authService
+      .refresh()
       .then((data) => {
-        if (!cancelled) setUser(mapUsuarioResponse(data))
+        if (cancelled) return
+        setAccessToken(data.accessToken)
+        return usuarioService.me()
+      })
+      .then((meData) => {
+        if (!cancelled && meData) {
+          setUser(mapUsuarioResponse(meData))
+        }
       })
       .catch(() => {
         if (!cancelled) {
-          tokenStorage.clear()
+          clearAccessToken()
           setUser(null)
         }
       })
@@ -64,30 +69,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, senha: string) => {
     const tokens = await authService.login({ email, senha })
-    tokenStorage.setTokens(tokens.token, tokens.refreshToken)
+    setAccessToken(tokens.accessToken)
     await refreshUser()
   }, [refreshUser])
 
   const register = useCallback(async (payload: RegisterRequest) => {
     const tokens = await authService.register(payload)
-    tokenStorage.setTokens(tokens.token, tokens.refreshToken)
+    setAccessToken(tokens.accessToken)
     await refreshUser()
   }, [refreshUser])
 
   const logout = useCallback(async () => {
     try {
-      const refreshToken = tokenStorage.getRefreshToken()
-      if (refreshToken) await authService.logout(refreshToken)
+      await authService.logout()
     } catch {
       // ignora falha no logout e limpa local mesmo assim
     } finally {
-      tokenStorage.clear()
+      clearAccessToken()
       setUser(null)
       setSelectedEvent(null)
     }
   }, [])
 
-  const isAuthenticated = Boolean(tokenStorage.getAccessToken())
+  const isAuthenticated = Boolean(getAccessToken())
 
   return (
     <AppContext.Provider

@@ -127,6 +127,7 @@ export function mapComentarioResponse(comentario: ComentarioResponse): Comment {
 export function mapAgendaResponse(item: AgendaResponse): AgendaItem {
   return {
     id: item.id,
+    date: item.inicio,
     time: formatTime(item.inicio),
     title: item.titulo,
     description: item.descricao || '',
