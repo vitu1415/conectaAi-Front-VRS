@@ -32,6 +32,15 @@ export interface  Event {
   highlights: string[]
 }
 
+export interface PostMedia {
+  id: string
+  url: string
+  nomeArquivo: string
+  contentType: string
+  tipo: 'IMAGEM' | 'VIDEO'
+  ordem: number
+}
+
 export interface Post {
   id: string
   eventId: string
@@ -48,6 +57,8 @@ export interface Post {
   liked: boolean
   timestamp: string
   type: 'post' | 'announcement'
+  postType?: 'TEXTO' | 'IMAGEM' | 'VIDEO'
+  midias?: PostMedia[]
 }
 
 export interface Poll {

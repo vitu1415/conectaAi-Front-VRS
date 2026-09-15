@@ -18,7 +18,7 @@ export function clearAccessToken() {
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 100000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

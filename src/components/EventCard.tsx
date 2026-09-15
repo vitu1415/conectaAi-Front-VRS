@@ -18,24 +18,26 @@ export function EventCard({ event, onEnter }: EventCardProps) {
       transition={{ duration: 0.3 }}
       className="group bg-white rounded-2xl border border-gray-100 overflow-hidden card-shadow hover:card-shadow-hover transition-all duration-300"
     >
-      <div className="relative h-40 overflow-hidden">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        {event.category && (
-          <Badge className="absolute top-3 left-3 bg-white/90 text-gray-800 border-0">
-            {event.category}
-          </Badge>
-        )}
-        <div className="absolute bottom-3 left-3 right-3">
-          <h3 className="text-white font-semibold text-lg leading-tight drop-shadow-sm">
-            {event.title}
-          </h3>
+      <Button onClick={() => onEnter?.(event)}>
+        <div className="relative h-40 overflow-hidden">
+          <img
+            src={event.image}
+            alt={event.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          {event.category && (
+            <Badge className="absolute top-3 left-3 bg-white/90 text-gray-800 border-0">
+              {event.category}
+            </Badge>
+          )}
+          <div className="absolute bottom-3 left-3 right-3">
+            <h3 className="text-white font-semibold text-lg leading-tight drop-shadow-sm">
+              {event.title}
+            </h3>
+          </div>
         </div>
-      </div>
+      </Button>
       <div className="p-4 space-y-3">
         <div className="flex flex-wrap gap-3 text-sm text-gray-500">
           <span className="flex items-center gap-1.5">

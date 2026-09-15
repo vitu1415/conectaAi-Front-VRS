@@ -6,6 +6,8 @@ import type {
   PageResponse,
   PostRequest,
   PostResponse,
+  TipoPost,
+  VisibilidadePost,
 } from '@/types/api'
 
 export async function feed(
@@ -38,8 +40,19 @@ export async function porUsuario(
   return data
 }
 
-export async function criar(payload: PostRequest): Promise<PostResponse> {
-  const { data } = await api.post<PostResponse>('/post', payload)
+export async function criar(
+  params: { eventoId: string; texto: string; tipo: TipoPost; visibilidade: VisibilidadePost },
+  midias?: File[],
+): Promise<PostResponse> {
+  const formData = new FormData()
+  midias?.forEach((file) => {
+    formData.append('midias', file)
+  })
+
+  const { data } = await api.post<PostResponse>('/post', formData, {
+    params,
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
   return data
 }
 

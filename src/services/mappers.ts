@@ -100,13 +100,15 @@ export function mapPostResponse(post: PostResponse): Post {
     userName: post.autor.nome,
     userAvatar: post.autor.fotoPerfil || '',
     content: post.texto,
-    image: post.imagemUrl,
+    image: post.midias?.[0]?.url,
     likes: post.curtidasCount,
     comments: 0,
     shares: 0,
     liked: post.curtido,
     timestamp: post.criadoEm,
     type: 'post',
+    postType: post.tipo,
+    midias: post.midias,
   }
 }
 

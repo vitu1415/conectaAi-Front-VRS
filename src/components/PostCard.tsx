@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, MessageCircle, Share2, MoreHorizontal, Send } from 'lucide-react'
+import { Heart, MessageCircle, MoreHorizontal, Send, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Avatar } from '@/components/ui'
+import { SmartVideo } from '@/components/SmartVideo'
 import * as postsService from '@/services/posts'
 import * as comentariosService from '@/services/comentarios'
 import { mapComentarioResponse } from '@/services/mappers'
@@ -20,6 +21,7 @@ export function PostCard({ post }: PostCardProps) {
   const [comments, setComments] = useState<Comment[]>([])
   const [commentsLoading, setCommentsLoading] = useState(false)
   const [commentText, setCommentText] = useState('')
+  const [mediaIndex, setMediaIndex] = useState(0)
 
   const handleToggleLike = async () => {
     try {
@@ -78,10 +80,85 @@ export function PostCard({ post }: PostCardProps) {
 
       <p className="text-sm text-gray-700 leading-relaxed">{post.content}</p>
 
-      {post.image && (
-        <div className="rounded-xl overflow-hidden">
-          <img src={post.image} alt="" className="w-full h-48 object-cover" />
-        </div>
+      {post.midias && post.midias.length > 0 && (
+        <>
+          {post.midias.length === 1 && post.midias[0].tipo === 'VIDEO' ? (
+            <div className="w-full rounded-xl overflow-hidden -mx-4 -mt-3 first:-mt-4">
+              <SmartVideo
+                src={post.midias[0].url}
+                containerClassName="-mx-0"
+              />
+            </div>
+          ) : post.midias.length === 1 ? (
+            <div className="w-full rounded-xl overflow-hidden bg-gray-50">
+              <img
+                src={post.midias[0].url}
+                alt=""
+                loading="lazy"
+                className="w-full max-h-96 object-contain"
+              />
+            </div>
+          ) : (
+            <div className="-mx-4 -mt-1">
+              <div className="relative overflow-hidden rounded-xl">
+                <div className="relative">
+                  {post.midias[mediaIndex].tipo === 'VIDEO' ? (
+                    <SmartVideo
+                      src={post.midias[mediaIndex].url}
+                    />
+                  ) : (
+                    <div className="bg-gray-50">
+                      <img
+                        src={post.midias[mediaIndex].url}
+                        alt=""
+                        loading="lazy"
+                        className="w-full max-h-80 object-contain"
+                      />
+                    </div>
+                  )}
+
+                  {post.midias.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setMediaIndex((prev) => (prev - 1 + post.midias!.length) % post.midias!.length)
+                        }}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setMediaIndex((prev) => (prev + 1) % post.midias!.length)
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {post.midias.length > 1 && (
+                  <div className="flex items-center justify-center gap-1.5 py-2">
+                    {post.midias.map((m, idx) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setMediaIndex(idx)}
+                        className={cn(
+                          'w-1.5 h-1.5 rounded-full transition-colors',
+                          idx === mediaIndex ? 'bg-cyan-500' : 'bg-gray-300',
+                        )}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <div className="flex items-center gap-6 pt-2">
@@ -103,11 +180,6 @@ export function PostCard({ post }: PostCardProps) {
           )}
         >
           <MessageCircle className="w-4 h-4" />
-          <span>{comments.length || post.comments}</span>
-        </button>
-        <button className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-cyan-500 transition-colors">
-          <Share2 className="w-4 h-4" />
-          <span>{post.shares}</span>
         </button>
       </div>
 

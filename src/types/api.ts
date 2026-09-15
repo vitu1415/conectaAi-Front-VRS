@@ -127,10 +127,18 @@ export interface MeuEventoResponse {
   dataInscricao: string
 }
 
+export interface PostMediaResponse {
+  id: string
+  url: string
+  nomeArquivo: string
+  contentType: string
+  tipo: TipoPost
+  ordem: number
+}
+
 export interface PostRequest {
   eventoId: string
   texto: string
-  imagemUrl?: string
   tipo: TipoPost
   visibilidade: VisibilidadePost
 }
@@ -140,7 +148,7 @@ export interface PostResponse {
   eventoId: string
   autor: UsuarioResumo
   texto: string
-  imagemUrl?: string
+  midias: PostMediaResponse[]
   tipo: TipoPost
   visibilidade: VisibilidadePost
   ativo: boolean
