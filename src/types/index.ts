@@ -37,7 +37,7 @@ export interface PostMedia {
   url: string
   nomeArquivo: string
   contentType: string
-  tipo: 'IMAGEM' | 'VIDEO'
+  tipo: 'TEXTO' | 'IMAGEM' | 'VIDEO'
   ordem: number
 }
 
