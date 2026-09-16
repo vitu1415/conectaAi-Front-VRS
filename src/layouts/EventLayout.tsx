@@ -216,7 +216,7 @@ export function EventLayout() {
                 key={item.id}
                 onClick={() => handleNav(item.id)}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-base font-medium transition-all duration-200',
                   isActive
                     ? 'bg-gradient-to-r from-cyan-50 to-tertiary-50 text-cyan-700'
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50',
@@ -327,7 +327,7 @@ export function EventLayout() {
                 <span className={cn('transition-transform', isActive && 'scale-110')}>
                   {item.icon}
                 </span>
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <span className="text-xs font-medium">{item.label}</span>
               </button>
             )
           })}

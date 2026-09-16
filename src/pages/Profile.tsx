@@ -271,102 +271,199 @@ export function Profile() {
         Voltar
       </button>
 
-      <Card padding="none" hover={false} className="overflow-hidden">
-        {/* Banner */}
-        <div className="relative h-40 bg-gradient-to-br from-cyan-400 via-cyan-500 to-tertiary-500">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_60%)]" />
-          <div className="absolute -top-10 -left-8 w-44 h-44 rounded-full bg-white/10 blur-2xl" />
-          <div className="absolute -bottom-12 right-4 w-36 h-36 rounded-full bg-white/10 blur-2xl" />
-        </div>
-
-        <div className="px-5 sm:px-6 pb-6">
-          <div className="flex flex-col items-center sm:flex-row sm:items-end gap-3 -mt-14">
-            <Avatar
-              src={profileUser.avatar}
-              alt={profileUser.name}
-              size="xl"
-              className="ring-4 ring-white shadow-xl"
-            />
-            <div className="flex-1 text-center sm:text-left sm:pb-1.5 min-w-0">
-              <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-                <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{profileUser.name}</h1>
-                {'level' in profileUser && profileUser.level > 0 && (
-                  <Badge variant="primary" size="sm">
-                    <Trophy className="w-3 h-3" />
-                    Nível {profileUser.level}
-                  </Badge>
+      {/* Mobile: Banner + Avatar overlap */}
+      <div className="lg:hidden">
+        <Card padding="none" hover={false} className="overflow-hidden">
+          <div className="relative h-48 bg-gradient-to-br from-cyan-400 via-cyan-500 to-tertiary-500">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_60%)]" />
+            <div className="absolute -top-10 -left-8 w-44 h-44 rounded-full bg-white/10 blur-2xl" />
+            <div className="absolute -bottom-12 right-4 w-36 h-36 rounded-full bg-white/10 blur-2xl" />
+          </div>
+          <div className="px-5 pb-6">
+            <div className="flex flex-col items-center gap-3 -mt-16">
+              <Avatar
+                src={profileUser.avatar}
+                alt={profileUser.name}
+                size="xl"
+                className="ring-4 ring-white shadow-xl"
+              />
+              <div className="flex flex-col items-center text-center min-w-0 w-full">
+                <div className="flex items-center justify-center gap-2 flex-wrap">
+                  <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{profileUser.name}</h1>
+                  {'level' in profileUser && profileUser.level > 0 && (
+                    <Badge variant="primary" size="sm">
+                      <Trophy className="w-3 h-3" />
+                      Nível {profileUser.level}
+                    </Badge>
+                  )}
+                </div>
+                {'description' in profileUser && profileUser.description && (
+                  <p className="text-sm text-gray-500 mt-1">{profileUser.description}</p>
                 )}
+                <div className="flex gap-2 mt-3">
+                  {actionButtons}
+                </div>
               </div>
-              {'description' in profileUser && profileUser.description && (
-                <p className="text-sm text-gray-500 mt-1">{profileUser.description}</p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-2 mt-5">
+              {profileUser.city && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.city}
+                </span>
+              )}
+              {'university' in profileUser && profileUser.university && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <School className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.university}
+                </span>
+              )}
+              {'age' in profileUser && profileUser.age > 0 && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.age} anos
+                </span>
+              )}
+              {'xp' in profileUser && profileUser.xp > 0 && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <Zap className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.xp} XP
+                </span>
               )}
             </div>
-            <div className="flex gap-2 sm:pb-1">
+
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 mt-5 pt-5 border-t border-gray-100">
+              <button
+                onClick={() => setActiveTab('connections')}
+                className="flex items-center gap-1.5 text-sm hover:text-cyan-600 transition-colors"
+              >
+                <span className="font-bold text-gray-900">{activeConnections.length}</span>
+                <span className="text-gray-500">conexões</span>
+              </button>
+              {!isOwnProfile && commonConnections.length > 0 && (
+                <p className="text-sm text-gray-500">
+                  <Users className="w-3.5 h-3.5 inline mr-1" />
+                  Você e {profileUser.name} têm <strong>{commonConnections.length}</strong> conexão(ões) em comum
+                </p>
+              )}
+            </div>
+
+            {'interests' in profileUser && profileUser.interests.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-1.5 mt-4">
+                {profileUser.interests.map((interest: string) => (
+                  <Badge key={interest} variant="primary">{interest}</Badge>
+                ))}
+              </div>
+            )}
+
+            {'badges' in profileUser && profileUser.badges.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2 mt-3">
+                {profileUser.badges.map((badge: { id: string; name: string }) => (
+                  <Badge key={badge.id} variant="secondary">{badge.name}</Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      {/* Desktop: Banner full-width + info below */}
+      <div className="hidden lg:block">
+        <Card padding="none" hover={false} className="overflow-hidden">
+          <div className="relative h-52 bg-gradient-to-br from-cyan-400 via-cyan-500 to-tertiary-500">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_60%)]" />
+            <div className="absolute -top-10 -left-8 w-44 h-44 rounded-full bg-white/10 blur-2xl" />
+            <div className="absolute -bottom-12 right-4 w-36 h-36 rounded-full bg-white/10 blur-2xl" />
+          </div>
+          <div className="px-8 pb-8">
+            <div className="flex items-end gap-5 -mt-12">
+              <Avatar
+                src={profileUser.avatar}
+                alt={profileUser.name}
+                size="xl"
+                className="ring-4 ring-white shadow-xl shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{profileUser.name}</h1>
+                  {'level' in profileUser && profileUser.level > 0 && (
+                    <Badge variant="primary" size="sm">
+                      <Trophy className="w-3 h-3" />
+                      Nível {profileUser.level}
+                    </Badge>
+                  )}
+                </div>
+                {'description' in profileUser && profileUser.description && (
+                  <p className="text-sm text-gray-500 mt-1">{profileUser.description}</p>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-3">
               {actionButtons}
             </div>
-          </div>
 
-          <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-5">
-            {profileUser.city && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
-                <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                {profileUser.city}
-              </span>
-            )}
-            {'university' in profileUser && profileUser.university && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
-                <School className="w-3.5 h-3.5 text-gray-400" />
-                {profileUser.university}
-              </span>
-            )}
-            {'age' in profileUser && profileUser.age > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
-                <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                {profileUser.age} anos
-              </span>
-            )}
-            {'xp' in profileUser && profileUser.xp > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
-                <Zap className="w-3.5 h-3.5 text-gray-400" />
-                {profileUser.xp} XP
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-5 pt-5 border-t border-gray-100">
-            <button
-              onClick={() => setActiveTab('connections')}
-              className="flex items-center gap-1.5 text-sm hover:text-cyan-600 transition-colors"
-            >
-              <span className="font-bold text-gray-900">{activeConnections.length}</span>
-              <span className="text-gray-500">conexões</span>
-            </button>
-
-            {!isOwnProfile && commonConnections.length > 0 && (
-              <p className="text-sm text-gray-500">
-                <Users className="w-3.5 h-3.5 inline mr-1" />
-                Você e {profileUser.name} têm <strong>{commonConnections.length}</strong> conexão(ões) em comum
-              </p>
-            )}
-          </div>
-
-          {'interests' in profileUser && profileUser.interests.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-4">
-              {profileUser.interests.map((interest: string) => (
-                <Badge key={interest} variant="primary">{interest}</Badge>
-              ))}
+            <div className="flex flex-wrap gap-2 mt-5">
+              {profileUser.city && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.city}
+                </span>
+              )}
+              {'university' in profileUser && profileUser.university && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <School className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.university}
+                </span>
+              )}
+              {'age' in profileUser && profileUser.age > 0 && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.age} anos
+                </span>
+              )}
+              {'xp' in profileUser && profileUser.xp > 0 && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-xl text-xs text-gray-600">
+                  <Zap className="w-3.5 h-3.5 text-gray-400" />
+                  {profileUser.xp} XP
+                </span>
+              )}
             </div>
-          )}
 
-          {'badges' in profileUser && profileUser.badges.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
-              {profileUser.badges.map((badge: { id: string; name: string }) => (
-                <Badge key={badge.id} variant="secondary">{badge.name}</Badge>
-              ))}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-5 pt-5 border-t border-gray-100">
+              <button
+                onClick={() => setActiveTab('connections')}
+                className="flex items-center gap-1.5 text-sm hover:text-cyan-600 transition-colors"
+              >
+                <span className="font-bold text-gray-900">{activeConnections.length}</span>
+                <span className="text-gray-500">conexões</span>
+              </button>
+              {!isOwnProfile && commonConnections.length > 0 && (
+                <p className="text-sm text-gray-500">
+                  <Users className="w-3.5 h-3.5 inline mr-1" />
+                  Você e {profileUser.name} têm <strong>{commonConnections.length}</strong> conexão(ões) em comum
+                </p>
+              )}
             </div>
-          )}
-        </div>
-      </Card>
+
+            {'interests' in profileUser && profileUser.interests.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-4">
+                {profileUser.interests.map((interest: string) => (
+                  <Badge key={interest} variant="primary">{interest}</Badge>
+                ))}
+              </div>
+            )}
+
+            {'badges' in profileUser && profileUser.badges.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {profileUser.badges.map((badge: { id: string; name: string }) => (
+                  <Badge key={badge.id} variant="secondary">{badge.name}</Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
 
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
@@ -532,7 +629,7 @@ export function Profile() {
             </div>
           </div>
           <div>
-            <p className="block text-sm font-medium text-gray-700 mb-2">Interesses</p>
+            <p className="block text-lg font-medium text-gray-700 mb-2">Interesses</p>
             <div className="space-y-4">
               {INTEREST_CATEGORIES.map((category) => {
                 const categoryCount = category.items.filter((interest) =>

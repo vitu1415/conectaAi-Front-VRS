@@ -116,7 +116,7 @@ export function CreatePost({ eventId, onCreated }: CreatePostProps) {
             }}
             onFocus={() => setIsExpanded(true)}
             placeholder="Compartilhe algo sobre o evento..."
-            className="w-full bg-transparent text-sm text-gray-700 placeholder:text-gray-400 resize-none outline-none min-h-[40px]"
+            className="w-full bg-transparent text-base text-gray-700 placeholder:text-gray-400 resize-none outline-none min-h-[40px]"
             rows={isExpanded ? 3 : 1}
           />
 
