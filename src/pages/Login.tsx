@@ -5,6 +5,7 @@ import { Mail, Lock, ArrowRight, User as UserIcon } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
 import { useApp } from '@/contexts/AppContext'
 import { getErrorMessage } from '@/utils/error'
+import logo from '../assets/logo.png'
 
 type Mode = 'login' | 'register'
 
@@ -69,7 +70,7 @@ export function Login() {
               transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
               className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/20"
             >
-              <img src="/src/assets/favicon.ico" alt="Logo" className="w-20 h-20" />
+              <img src={logo} alt="Logo" className="w-20 h-20" />
             </motion.div>
             <h1 className="text-3xl font-bold">
               <span className="gradient-text">ConectaAí</span>
