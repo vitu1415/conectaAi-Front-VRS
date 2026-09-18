@@ -5,7 +5,7 @@ import {
   Settings, Share2, UserPlus, UserCheck,
   MessageCircle, ArrowLeft, Camera,
 } from 'lucide-react'
-import { Avatar, Badge, Button, Card, Tabs, Modal, Input } from '@/components/ui'
+import { Avatar, Badge, Button, Card, Tabs, Modal, Input, ImageCropModal } from '@/components/ui'
 import { ConnectionList } from '@/components/ConnectionList'
 import { useApp } from '@/contexts/AppContext'
 import * as usuarioService from '@/services/usuarios'
@@ -46,6 +46,8 @@ export function Profile() {
   const [editFotoPreview, setEditFotoPreview] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
+  const [cropOpen, setCropOpen] = useState(false)
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const activeConnections = useMemo(
@@ -161,7 +163,15 @@ export function Profile() {
     setEditFotoPreview(null)
     setSelectedInterests(interests)
     setEditError(null)
+    setCropOpen(false)
+    setCropImageSrc(null)
     setEditOpen(true)
+  }
+
+  const handleCropComplete = (croppedFile: File, previewUrl: string) => {
+    setEditFile(croppedFile)
+    setEditFotoPreview(previewUrl)
+    setCropImageSrc(null)
   }
 
   const handleSave = async () => {
@@ -371,13 +381,13 @@ export function Profile() {
       {/* Desktop: Banner full-width + info below */}
       <div className="hidden lg:block">
         <Card padding="none" hover={false} className="overflow-hidden">
-          <div className="relative h-52 bg-gradient-to-br from-cyan-400 via-cyan-500 to-tertiary-500">
+          <div className="relative h-36 bg-gradient-to-br from-cyan-400 via-cyan-500 to-tertiary-500">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_60%)]" />
             <div className="absolute -top-10 -left-8 w-44 h-44 rounded-full bg-white/10 blur-2xl" />
             <div className="absolute -bottom-12 right-4 w-36 h-36 rounded-full bg-white/10 blur-2xl" />
           </div>
-          <div className="px-8 pb-8">
-            <div className="flex items-end gap-5 -mt-12">
+          <div className="px-8 pt-4 pb-8">
+            <div className="flex items-end gap-5">
               <Avatar
                 src={profileUser.avatar}
                 alt={profileUser.name}
@@ -622,8 +632,9 @@ export function Profile() {
                 onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (!file) return
-                  setEditFile(file)
-                  setEditFotoPreview(URL.createObjectURL(file))
+                  setCropImageSrc(URL.createObjectURL(file))
+                  setCropOpen(true)
+                  e.target.value = ''
                 }}
               />
             </div>
@@ -686,6 +697,16 @@ export function Profile() {
           </Button>
         </div>
       </Modal>
+
+      <ImageCropModal
+        isOpen={cropOpen}
+        onClose={() => {
+          setCropOpen(false)
+          setCropImageSrc(null)
+        }}
+        imageSrc={cropImageSrc || ''}
+        onCropComplete={handleCropComplete}
+      />
     </div>
   )
 }
