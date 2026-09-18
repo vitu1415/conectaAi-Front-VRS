@@ -11,6 +11,7 @@ import * as eventoService from '@/services/eventos'
 import * as conexoesService from '@/services/conexoes'
 import { mapEventoResponse, mapConexaoRecebida } from '@/services/mappers'
 import type { ConnectionRequest, Event } from '@/types'
+import logo from '../assets/logo.png'
 
 export function EventsDashboard() {
   const navigate = useNavigate()
@@ -89,7 +90,7 @@ export function EventsDashboard() {
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center">
-              <img src="/src/assets/favicon.ico" alt="Logo" className="w-8 h-8" />
+              <img src={logo} alt="Logo" className="w-8 h-8" />
             </div>
             <span className="gradient-text font-bold text-lg">ConectaAí</span>
           </div>
