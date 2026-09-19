@@ -12,15 +12,15 @@ import { AuthGuard } from './AuthGuard'
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: 'app/',
     element: <Navigate to="/events" replace />,
   },
   {
-    path: '/login',
+    path: 'app/login',
     element: <Login />,
   },
   {
-    path: '/events',
+    path: 'app/events',
     element: (
       <AuthGuard>
         <EventsDashboard />
@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/profile',
+    path: 'app/profile',
     element: (
       <AuthGuard>
         <Profile />
@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/profile/:userId',
+    path: 'app/profile/:userId',
     element: (
       <AuthGuard>
         <Profile />
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/event/:eventId',
+    path: 'app/event/:eventId',
     element: (
       <AuthGuard>
         <EventLayout />
