@@ -37,7 +37,7 @@ export function PersonCard({ person, onConnect, onAccept, onReject }: PersonCard
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="bg-white rounded-2xl border border-gray-100 card-shadow overflow-hidden cursor-pointer"
-      onClick={() => navigate(`/profile/${person.id}`)}
+      onClick={() => navigate(`/app/profile/${person.id}`)}
     >
       <div className="relative h-32 bg-gradient-to-br from-cyan-400 to-tertiary-400">
         <div className="absolute -bottom-10 left-4">

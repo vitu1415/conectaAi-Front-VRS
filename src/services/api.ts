@@ -98,8 +98,8 @@ api.interceptors.response.use(
       return api(original)
     } catch {
       clearAccessToken()
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
+      if (window.location.pathname !== '/app/login') {
+        window.location.href = '/app/login'
       }
       return Promise.reject(error)
     }

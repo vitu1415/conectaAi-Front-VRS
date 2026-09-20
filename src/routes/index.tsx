@@ -13,7 +13,7 @@ import { AuthGuard } from './AuthGuard'
 export const router = createBrowserRouter([
   {
     path: 'app/',
-    element: <Navigate to="/events" replace />,
+    element: <Navigate to="/app/events" replace />,
   },
   {
     path: 'app/login',

@@ -66,7 +66,7 @@ export function EventsDashboard() {
     } catch {
       // já inscrito ou erro — navega mesmo assim
     }
-    navigate(`/event/${event.id}/feed`)
+    navigate(`/app/event/${event.id}/feed`)
   }
 
   const handleAcceptRequest = async (id: string) => {
@@ -113,7 +113,7 @@ export function EventsDashboard() {
             </button>
             {/* Avatar → Profile */}
             <button
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate('/app/profile')}
               className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-cyan-400 transition-all"
               aria-label="Meu perfil"
             >

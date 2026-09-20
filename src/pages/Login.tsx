@@ -34,7 +34,7 @@ export function Login() {
       } else {
         await register({ nome: name.trim(), email, senha: password })
       }
-      navigate('/events', { replace: true })
+      navigate('/app/events', { replace: true })
     } catch (err) {
       setError(getErrorMessage(err))
     } finally {

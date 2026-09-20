@@ -72,7 +72,7 @@ export function EventLayout() {
   const currentSection = currentPath.split('/').pop() || 'feed'
 
   const handleNav = (section: string) => {
-    navigate(`/event/${eventId}/${section}`)
+    navigate(`/app/event/${eventId}/${section}`)
     setSidebarOpen(false)
   }
 
@@ -111,7 +111,7 @@ export function EventLayout() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-gray-500">{error || 'Evento não encontrado'}</p>
-          <button onClick={() => navigate('/events')} className="text-cyan-500 mt-2 underline">
+          <button onClick={() => navigate('/app/events')} className="text-cyan-500 mt-2 underline">
             Voltar para eventos
           </button>
         </div>
@@ -142,7 +142,7 @@ export function EventLayout() {
         {/* Event quick info */}
         <div className="px-4 py-1.5 bg-gradient-to-r from-cyan-500/5 to-tertiary-500/5 border-t border-gray-100 flex items-center gap-2 overflow-x-auto">
           <button
-            onClick={() => navigate('/events')}
+            onClick={() => navigate('/app/events')}
             className="flex items-center gap-1 text-xs text-cyan-600 shrink-0 hover:text-cyan-700"
           >
             <ArrowLeft className="w-3 h-3" />
@@ -178,7 +178,7 @@ export function EventLayout() {
         {/* Logo + Event Name */}
         <div className="px-5 pt-5 pb-3 border-b border-gray-100">
           <button
-            onClick={() => navigate('/events')}
+            onClick={() => navigate('/app/events')}
             className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-cyan-600 mb-3 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -271,7 +271,7 @@ export function EventLayout() {
                 <div>
                   <div className="flex items-center gap-2 text-white/80 text-xs mb-1">
                     <button
-                      onClick={() => navigate('/events')}
+                      onClick={() => navigate('/app/events')}
                       className="flex items-center gap-1 hover:text-white transition-colors"
                     >
                       <ChevronLeft className="w-3 h-3" />

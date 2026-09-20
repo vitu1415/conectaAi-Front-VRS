@@ -23,7 +23,7 @@ export function Groups() {
           participar de grupos com interesses em comum.
         </p>
         <button
-          onClick={() => navigate(`/event/${eventId}/feed`)}
+          onClick={() => navigate(`/app/event/${eventId}/feed`)}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 shadow-sm text-sm font-medium text-gray-600 hover:border-cyan-400 hover:text-cyan-600 mt-6 transition-all duration-200"
         >
           <ArrowLeft className="w-4 h-4" />

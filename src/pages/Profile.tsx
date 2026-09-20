@@ -219,7 +219,7 @@ export function Profile() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-500">Usuário não encontrado</p>
-          <button onClick={() => navigate('/events')} className="text-cyan-500 mt-2 underline">
+            <button onClick={() => navigate('/app/events')} className="text-cyan-500 mt-2 underline">
             Voltar para eventos
           </button>
         </div>

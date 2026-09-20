@@ -51,7 +51,7 @@ export function ConnectionList({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
                 className="bg-white rounded-xl border border-gray-100 p-3 flex items-center gap-3 hover:border-cyan-200 transition-colors cursor-pointer"
-                onClick={() => navigate(`/profile/${conn.usuarioId}`)}
+                onClick={() => navigate(`/app/profile/${conn.usuarioId}`)}
               >
                 <Avatar src={conn.usuario.avatar} alt={conn.usuario.name} size="md" />
                 <div className="flex-1 min-w-0">
@@ -75,7 +75,7 @@ export function ConnectionList({
                     size="sm"
                     variant="ghost"
                     icon={<MessageCircle className="w-4 h-4" />}
-                    onClick={(e) => { e.stopPropagation(); navigate(`/profile/${conn.usuarioId}`) }}
+                    onClick={(e) => { e.stopPropagation(); navigate(`/app/profile/${conn.usuarioId}`) }}
                   />
                   {onRemoveConnection && (
                     <Button
