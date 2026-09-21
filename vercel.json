@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/",
+      "destination": "https://landpage-conectaai.vercel.app/"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
