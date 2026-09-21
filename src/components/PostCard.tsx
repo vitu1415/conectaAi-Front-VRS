@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Heart, MessageCircle, MoreHorizontal, Send, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Avatar } from '@/components/ui'
@@ -15,6 +16,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const navigate = useNavigate()
   const [liked, setLiked] = useState(post.liked)
   const [likes, setLikes] = useState(post.likes)
   const [commentsOpen, setCommentsOpen] = useState(false)
@@ -66,13 +68,16 @@ export function PostCard({ post }: PostCardProps) {
       className="bg-white rounded-2xl border border-gray-100 card-shadow p-4 space-y-3"
     >
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
+        <button
+          onClick={() => navigate(`/app/profile/${post.userId}`)}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
           <Avatar src={post.userAvatar} alt={post.userName} size="md" />
-          <div>
+          <div className="text-left">
             <p className="font-semibold text-sm text-gray-900">{post.userName}</p>
             <p className="text-xs text-gray-400">{formatRelativeTime(post.timestamp)}</p>
           </div>
-        </div>
+        </button>
         <button className="p-1 rounded-lg hover:bg-gray-100 transition-colors">
           <MoreHorizontal className="w-4 h-4 text-gray-400" />
         </button>
