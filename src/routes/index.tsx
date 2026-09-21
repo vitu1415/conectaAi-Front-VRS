@@ -8,6 +8,7 @@ import { Groups } from '@/pages/Groups'
 import { Agenda } from '@/pages/Agenda'
 import { Announcements } from '@/pages/Announcements'
 import { Profile } from '@/pages/Profile'
+import { Onboarding } from '@/pages/Onboarding'
 import { AuthGuard } from './AuthGuard'
 
 export const router = createBrowserRouter([
@@ -18,6 +19,14 @@ export const router = createBrowserRouter([
   {
     path: 'app/login',
     element: <Login />,
+  },
+  {
+    path: 'app/onboarding',
+    element: (
+      <AuthGuard>
+        <Onboarding />
+      </AuthGuard>
+    ),
   },
   {
     path: 'app/events',

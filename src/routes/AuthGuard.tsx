@@ -1,8 +1,9 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useApp } from '@/contexts/AppContext'
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useApp()
+  const location = useLocation()
 
   if (loading) {
     return (
@@ -17,6 +18,17 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!isAuthenticated) {
     return <Navigate to="/app/login" replace />
+  }
+
+  const isNewUser = localStorage.getItem('newUser') === 'true'
+  const isOnboardingPage = location.pathname === '/app/onboarding'
+
+  if (isNewUser && !isOnboardingPage) {
+    return <Navigate to="/app/onboarding" replace />
+  }
+
+  if (!isNewUser && isOnboardingPage) {
+    return <Navigate to="/app/events" replace />
   }
 
   return <>{children}</>

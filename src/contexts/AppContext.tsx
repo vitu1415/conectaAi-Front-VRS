@@ -76,6 +76,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const register = useCallback(async (payload: RegisterRequest) => {
     const tokens = await authService.register(payload)
     setAccessToken(tokens.accessToken)
+    localStorage.setItem('newUser', 'true')
     await refreshUser()
   }, [refreshUser])
 
